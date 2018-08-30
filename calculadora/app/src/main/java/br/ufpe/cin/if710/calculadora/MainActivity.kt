@@ -2,12 +2,59 @@ package br.ufpe.cin.if710.calculadora
 
 import android.app.Activity
 import android.os.Bundle
+import android.widget.Button
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : Activity() {
+    private var display: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setupListeners()
+    }
+
+    private fun setupListeners() {
+        // Add btn_Clear listener later since it'll have
+        // different behaviour than the rest
+        var buttons = arrayOf<String>(
+                "btn_1", "btn_2", "btn_3", "btn_4", "btn_5",
+                "btn_6", "btn_7", "btn_8", "btn_9", "btn_0",
+                "btn_Divide", "btn_Multiply", "btn_Add", "btn_Subtract",
+                "btn_Dot", "btn_Power", "btn_LParen", "btn_RParen"
+        ).map {
+            val id = applicationContext.resources.getIdentifier(it, "id", packageName)
+            findViewById<Button>(id)
+        }
+        setListeners(buttons)
+
+        btn_Clear.setOnClickListener {
+            updateDisplay(value="")
+        }
+
+        btn_Equal.setOnClickListener {
+            attemptCalculation()
+        }
+    }
+
+    // TODO: Show calculated value
+    private fun attemptCalculation() {
+
+    }
+
+    private fun setListeners(buttons: List<Button?>): Unit {
+        buttons.forEach {
+            val btnText = it?.text
+            it?.setOnClickListener {
+                display += btnText
+                updateDisplay()
+            }
+        }
+    }
+
+    private fun updateDisplay(value: String? = null) {
+        display = value ?: display
+        text_calc.setText(display)
     }
 
     //Como usar a função:
