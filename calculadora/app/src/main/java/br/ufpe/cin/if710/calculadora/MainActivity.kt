@@ -1,6 +1,7 @@
 package br.ufpe.cin.if710.calculadora
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Button
 import kotlinx.android.synthetic.main.activity_main.*
@@ -11,12 +12,14 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Configura os listeners
         setupListeners()
     }
 
     private fun setupListeners() {
-        // Adiciona os listeners aos botões que só "emitirão" texto
-        var buttons = arrayOf<String>(
+        // Adiciona os listeners aos botões que só adicionam texto ao display
+        val buttons = arrayOf<String>(
                 "btn_1", "btn_2", "btn_3", "btn_4", "btn_5",
                 "btn_6", "btn_7", "btn_8", "btn_9", "btn_0",
                 "btn_Divide", "btn_Multiply", "btn_Add", "btn_Subtract",
@@ -38,10 +41,14 @@ class MainActivity : Activity() {
         }
     }
 
-    // TODO: Show calculated value
+    // Tenta avaliar a expressão ou trata a exceção caso não consiga
     private fun attemptCalculation() {
-        val value = eval(display)
-        updateDisplay(value=value.toString())
+        try {
+            val value = eval(display)
+            updateDisplay(value=value.toString())
+        } catch(e: RuntimeException) {
+            showAlert("Operação inválida")
+        }
     }
 
     // Cada botão atualiza o display
@@ -59,6 +66,15 @@ class MainActivity : Activity() {
     private fun updateDisplay(value: String? = null) {
         display = value ?: display
         text_calc.setText(display)
+    }
+
+    // Exibe um alerta com a mensagem e título passados
+    private fun showAlert(message: String, title: String = "Erro") {
+        val builder = AlertDialog.Builder(this@MainActivity)
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setNeutralButton("OK") {_,_ -> Unit}
+        builder.create().show()
     }
 
     //Como usar a função:
