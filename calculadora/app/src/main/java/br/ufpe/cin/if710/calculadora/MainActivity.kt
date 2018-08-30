@@ -15,8 +15,7 @@ class MainActivity : Activity() {
     }
 
     private fun setupListeners() {
-        // Add btn_Clear listener later since it'll have
-        // different behaviour than the rest
+        // Adiciona os listeners aos botões que só "emitirão" texto
         var buttons = arrayOf<String>(
                 "btn_1", "btn_2", "btn_3", "btn_4", "btn_5",
                 "btn_6", "btn_7", "btn_8", "btn_9", "btn_0",
@@ -26,8 +25,10 @@ class MainActivity : Activity() {
             val id = applicationContext.resources.getIdentifier(it, "id", packageName)
             findViewById<Button>(id)
         }
+        // Helper function para adicionar os listeners de fato
         setListeners(buttons)
 
+        // Adiciona listeners aos botões com comportamento diferente
         btn_Clear.setOnClickListener {
             updateDisplay(value="")
         }
@@ -39,9 +40,11 @@ class MainActivity : Activity() {
 
     // TODO: Show calculated value
     private fun attemptCalculation() {
-
+        val value = eval(display)
+        updateDisplay(value=value.toString())
     }
 
+    // Cada botão atualiza o display
     private fun setListeners(buttons: List<Button?>): Unit {
         buttons.forEach {
             val btnText = it?.text
@@ -52,6 +55,7 @@ class MainActivity : Activity() {
         }
     }
 
+    // Faz update do display
     private fun updateDisplay(value: String? = null) {
         display = value ?: display
         text_calc.setText(display)
