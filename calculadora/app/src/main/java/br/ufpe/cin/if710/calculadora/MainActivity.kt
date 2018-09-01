@@ -13,8 +13,17 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        updateDisplay(savedInstanceState?.getString("display"))
+        setAnswer(savedInstanceState?.getString("answer"))
+
         // Configura os listeners
         setupListeners()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString("display", display);
+        outState?.putString("answer", text_info.text.toString())
     }
 
     private fun setupListeners() {
@@ -45,9 +54,10 @@ class MainActivity : Activity() {
     private fun attemptCalculation() {
         try {
             val value = eval(display)
-            updateDisplay(value=value.toString())
+            setAnswer(value.toString())
         } catch(e: RuntimeException) {
             showAlert("Operação inválida")
+            updateDisplay("")
         }
     }
 
@@ -60,6 +70,10 @@ class MainActivity : Activity() {
                 updateDisplay()
             }
         }
+    }
+
+    private fun setAnswer(value: String?) {
+        text_info.text = value ?: text_info.text
     }
 
     // Faz update do display
